@@ -26,7 +26,7 @@ BitcoinExchange::BitcoinExchange(void)
 
 BitcoinExchange::~BitcoinExchange(void) {}
 
-// mist
+// misc
 
 double	BitcoinExchange::getValue(const std::string &date, const double &amount) const
 {
@@ -92,7 +92,7 @@ uint64_t	BitcoinExchange::dateToTimeStamp(const std::string &date) const
 				throw BitcoinExchange::InvalidDateException();
 			break ;
 		case 2:
-			if (!_inrange(day, 1, 28))
+			if (!_inrange(day, 1, 28 + (_isleapyear(year)) ? 1 : 0))
 				throw BitcoinExchange::InvalidDateException();
 			break ;
 		case 3:

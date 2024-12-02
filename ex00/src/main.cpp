@@ -23,7 +23,7 @@ int32_t	main(int32_t ac, char **av)
 	std::ifstream	file;
 	std::string		line;
 	std::string		date;
-	std::string		amount;
+	double			amount;
 	double			val;
 
 	if (ac != 2) {
@@ -45,9 +45,12 @@ int32_t	main(int32_t ac, char **av)
 			try {
 				date = line.substr(0, line.find('|'));
 				date = _trim(date);
-				amount = line.substr(line.find('|') + 1);
-				amount = _trim(amount);
-				val = FTX.getValue(date, _stod(amount));
+				try {
+					amount = _stod(_trim(line.substr(line.find('|') + 1)));
+				} catch (std::exception &e) {
+					std::cout << "Error: '" << line << "': Invalid Amount\n";
+				}
+				val = FTX.getValue(date, amount);
 				std::cout << FLTCFG << amount << " BTC @ " << date << " = " << val << "\n";
 			} catch (BitcoinExchange::InvalidDateException &e) {
 				std::cout << "Error: '" << line << "': Invalid date\n";
