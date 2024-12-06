@@ -10,8 +10,8 @@
 #ifndef BITCOINEXCHANGE_HPP
 # define BITCOINEXCHANGE_HPP
 
-# include <list>
 # include <string>
+# include <vector>
 # include <cstdint>
 # include <exception>
 
@@ -26,7 +26,7 @@ class BitcoinExchange
 {
 	private:
 
-		std::list<pricedata_t>	_prices;
+		std::vector<pricedata_t>	_prices;
 
 		uint64_t	dateToTimeStamp(const std::string &date) const;
 		double		getPrice(const std::string &price) const;

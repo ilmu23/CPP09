@@ -30,9 +30,9 @@ BitcoinExchange::~BitcoinExchange(void) {}
 
 double	BitcoinExchange::getValue(const std::string &date, const double &amount) const
 {
-	std::list<pricedata_t>::const_iterator	i;
-	uint64_t								ts;
-	double									out;
+	std::vector<pricedata_t>::const_iterator	i;
+	uint64_t									ts;
+	double										out;
 
 	if (amount < 0)
 		throw BitcoinExchange::InvalidAmountException();
@@ -194,7 +194,7 @@ static inline uint16_t	_getDays(const uint16_t &month)
 	uint16_t				days;
 	size_t					i;
 
-	for (i = days = 0; i < month - 1; i++)
+	for (i = days = 0; i < static_cast<size_t>(month - 1); i++)
 		days += dayarr[i];
 	return days;
 }
