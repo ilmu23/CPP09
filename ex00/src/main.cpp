@@ -7,6 +7,7 @@
 //
 // <<main.cpp>>
 
+#include <regex>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -14,7 +15,7 @@
 
 #define FLTCFG	std::fixed << std::setprecision(2)
 
-#define _stod(x)	((x.find('.')) ? std::stod(x) : static_cast<double>(std::stoull(x)))
+#define _stod(x)	((std::regex_match(x, dnum)) ? std::stod(x) : static_cast<double>(std::stoull(x)))
 #define _trim(x)	(x.substr(x.find_first_not_of("\t\n\v\r\f "), x.find_last_not_of("\t\n\v\r\f ") - x.find_first_not_of("\t\n\v\r\f ") + 1))
 
 int32_t	main(int32_t ac, char **av)
@@ -23,7 +24,9 @@ int32_t	main(int32_t ac, char **av)
 	std::ifstream	file;
 	std::string		line;
 	std::string		date;
-	double			amount;
+	std::string		amount;
+	std::regex		dnum("^[0-9]+\\.[0-9]*$");
+	std::regex		inum("^[0-9]+$");
 	double			val;
 
 	if (ac != 2) {
@@ -45,12 +48,10 @@ int32_t	main(int32_t ac, char **av)
 			try {
 				date = line.substr(0, line.find('|'));
 				date = _trim(date);
-				try {
-					amount = _stod(_trim(line.substr(line.find('|') + 1)));
-				} catch (std::exception &e) {
-					std::cout << "Error: '" << line << "': Invalid Amount\n";
-				}
-				val = FTX.getValue(date, amount);
+				amount = _trim(line.substr(line.find('|') + 1));
+				if (!std::regex_match(amount, dnum) && !std::regex_match(amount, inum))
+					throw BitcoinExchange::InvalidAmountException();
+				val = FTX.getValue(date, _stod(amount));
 				std::cout << FLTCFG << amount << " BTC @ " << date << " = " << val << "\n";
 			} catch (BitcoinExchange::InvalidDateException &e) {
 				std::cout << "Error: '" << line << "': Invalid date\n";
