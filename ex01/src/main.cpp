@@ -21,8 +21,8 @@ int32_t	main(int32_t ac, char **av)
 			expr << av[i] << " ";
 		try {
 		r.solve(expr);
-		} catch (RPN::InvalidExpressionException &e) {
-			std::cout << "Invalid expression\n";
+		} catch (std::exception &e) {
+			std::cout << e.what() << "\n";
 		}
 	}
 	return 0;

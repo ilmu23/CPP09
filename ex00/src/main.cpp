@@ -51,14 +51,16 @@ int32_t	main(int32_t ac, char **av)
 				amount = _trim(line.substr(line.find('|') + 1));
 				if (!std::regex_match(amount, dnum) && !std::regex_match(amount, inum))
 					throw BitcoinExchange::InvalidAmountException();
-				val = FTX.getValue(date, _stod(amount));
+				try {
+					val = _stod(amount);
+				} catch (std::exception &e) {
+					std::cout << "Error: '" << line << "': Value too large\n";
+					continue ;
+				}
+				val = FTX.getValue(date, val);
 				std::cout << FLTCFG << amount << " BTC @ " << date << " = " << val << "\n";
-			} catch (BitcoinExchange::InvalidDateException &e) {
-				std::cout << "Error: '" << line << "': Invalid date\n";
-			} catch (BitcoinExchange::InvalidAmountException &e) {
-				std::cout << "Error: '" << line << "': Invalid Amount\n";
-			} catch (BitcoinExchange::ValueTooLargeException &e) {
-				std::cout << "Error: '" << line << "': Value too large\n";
+			} catch (std::exception &e) {
+				std::cout << "Error: '" << line << "': " << e.what() << "\n";
 			}
 		} else if (!line.empty())
 			std::cout << "Error: '" << line << "': Invalid input\n";
