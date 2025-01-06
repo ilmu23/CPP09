@@ -53,6 +53,10 @@ class BitcoinExchange
 			const char	*what(void) const noexcept;
 		};
 
+		class NoValuesLoadedException: public std::exception {
+			const char	*what(void) const noexcept;
+		};
+
 		class ValueTooLargeException: public std::exception {
 			const char	*what(void) const noexcept;
 		};

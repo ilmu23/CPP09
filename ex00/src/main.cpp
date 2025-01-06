@@ -59,6 +59,8 @@ int32_t	main(int32_t ac, char **av)
 				}
 				val = FTX.getValue(date, val);
 				std::cout << FLTCFG << amount << " BTC @ " << date << " = " << val << "\n";
+			} catch (BitcoinExchange::NoValuesLoadedException &e) {
+				break ;
 			} catch (std::exception &e) {
 				std::cout << "Error: '" << line << "': " << e.what() << "\n";
 			}

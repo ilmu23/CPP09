@@ -37,6 +37,8 @@ double	BitcoinExchange::getValue(const std::string &date, const double &amount) 
 	if (amount < 0)
 		throw BitcoinExchange::InvalidAmountException();
 	i = this->_prices.cbegin();
+	if (i == this->_prices.cend())
+		throw BitcoinExchange::NoValuesLoadedException();
 	ts = dateToTimeStamp(date);
 	while (i != this->_prices.cend() && (*i).timestamp < ts)
 		i++;
@@ -44,7 +46,7 @@ double	BitcoinExchange::getValue(const std::string &date, const double &amount) 
 		i--;
 	std::feclearexcept(FE_OVERFLOW);
 	out = amount * (*i).price;
-	if (std::fetestexcept(FE_UNDERFLOW))
+	if (std::fetestexcept(FE_OVERFLOW))
 		throw BitcoinExchange::ValueTooLargeException();
 	return out;
 }
@@ -59,6 +61,11 @@ const char	*BitcoinExchange::InvalidDateException::what(void) const noexcept
 const char	*BitcoinExchange::InvalidAmountException::what(void) const noexcept
 {
 	return "Invalid amount";
+}
+
+const char	*BitcoinExchange::NoValuesLoadedException::what(void) const noexcept
+{
+	return "No values loaded";
 }
 
 const char	*BitcoinExchange::ValueTooLargeException::what(void) const noexcept
