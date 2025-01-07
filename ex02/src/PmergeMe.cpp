@@ -12,7 +12,7 @@
 typedef std::pair<int, int>	__pair;
 typedef std::chrono::time_point<std::chrono::high_resolution_clock>	__time;
 
-#define cont	template <template <class T> class C>
+#define cont	template <template <typename ...T> class C>
 
 #define mcstime	std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()
 
